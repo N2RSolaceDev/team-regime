@@ -1,43 +1,41 @@
-import os
-import discord
-from discord.ext import commands
-from dotenv import load_dotenv
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const dotenv = require('dotenv');
 
-# Load environment variables
-load_dotenv()
-TOKEN = os.getenv("TOKEN")
+// Load environment variables
+dotenv.config();
 
-# Set up intents
-intents = discord.Intents.default()
-intents.guilds = True  # Needed to detect member joins
-intents.members = True
+// Create a new Discord client
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+});
 
-# Create bot instance
-bot = commands.Bot(command_prefix="!", intents=intents)
+// When the bot is ready
+client.once('ready', () => {
+  console.log(`✅ ${client.user.tag} is now online and ready!`);
+});
 
-@bot.event
-async def on_ready():
-    print(f'{bot.user.name} is online.')
+// When a new member joins
+client.on('guildMemberAdd', (member) => {
+  const channelId = '1393341385037447285'; // Replace with your actual channel ID
+  const guild = member.guild;
+  const channel = guild.channels.cache.get(channelId);
 
-@bot.event
-async def on_member_join(member):
-    channel = bot.get_channel(1393341385037447285)  # Replace with your target channel ID
-    
-    if channel is None:
-        print("Channel not found.")
-        return
+  if (!channel) {
+    console.error(`❌ Channel with ID ${channelId} not found.`);
+    return;
+  }
 
-    embed = discord.Embed(
-        title="Welcome to the Server!",
-        description=f"Hello {member.mention}, we're glad you're here!\n\nRead the rules and enjoy your stay.",
-        color=discord.Color.green()
-    )
-    
-    embed.set_image(url="https://www.solbot.store/Team_Regime.png ")
-    embed.set_thumbnail(url=member.avatar.url)
-    embed.set_footer(text="Server Name", icon_url=member.guild.icon.url if member.guild.icon else None)
-    
-    await channel.send(embed=embed)
+  const welcomeEmbed = new EmbedBuilder()
+    .setTitle("Welcome to The Regime!")
+    .setDescription(`Hello ${member}, we're glad you're here!\n\nRead The Regime Rules and requirements.`)
+    .setColor(0x00FF00) // Green color
+    .setImage('https://www.solbot.store/Team_Regime.png ') // Banner image
+    .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+    .setFooter({ text: guild.name, iconURL: guild.iconURL() })
+    .setTimestamp();
 
-# Run the bot
-bot.run(TOKEN)
+  channel.send({ embeds: [welcomeEmbed] });
+});
+
+// Log in with the bot token from .env
+client.login(process.env.TOKEN);
