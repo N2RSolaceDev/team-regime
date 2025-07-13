@@ -1,12 +1,16 @@
 {
   "name": "discord-welcome-bot",
   "version": "1.0.0",
-  "description": "A basic Discord welcome bot",
-  "main": "bot.js",
+  "description": "A Discord bot that sends a welcome message on member join",
+  "main": "index.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node index.js"
   },
-  "keywords": ["discord", "bot", "welcome"],
-  "author": "solace",
-  "license": "MIT"
+  "dependencies": {
+    "discord.js": "^14.16.0",
+    "dotenv": "^16.0.3"
+  },
+  "engines": {
+    "node": "18.x"
+  }
 }
