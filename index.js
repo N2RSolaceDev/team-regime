@@ -1,5 +1,7 @@
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const dotenv = require('dotenv');
+const express = require('express'); // HTTP server
+const app = express();
 
 // Load environment variables
 dotenv.config();
@@ -7,6 +9,17 @@ dotenv.config();
 // Create a new Discord client
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+});
+
+// Basic HTTP server route
+app.get('/', (req, res) => {
+  res.send('Bot is running!');
+});
+
+// Start the HTTP server (required by some hosting providers)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🌍 HTTP server is listening on port ${PORT}`);
 });
 
 // When the bot is ready
@@ -29,7 +42,7 @@ client.on('guildMemberAdd', (member) => {
     .setTitle("Welcome to The Regime!")
     .setDescription(`Hello ${member}, we're glad you're here!\n\nRead The Regime Rules and requirements.`)
     .setColor(0x00FF00) // Green color
-    .setImage('https://www.solbot.store/Team_Regime.png ') // Banner image
+    .setImage('https://www.solbot.store/Team_Regime.png ')
     .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
     .setFooter({ text: guild.name, iconURL: guild.iconURL() })
     .setTimestamp();
