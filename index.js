@@ -29,7 +29,7 @@ client.once('ready', () => {
 
 // When a new member joins
 client.on('guildMemberAdd', (member) => {
-  const channelId = '1393341385037447285'; // Replace with your actual channel ID
+  const channelId = '1382394173440921732'; // Replace with your actual channel ID
   const guild = member.guild;
   const channel = guild.channels.cache.get(channelId);
 
